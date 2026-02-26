@@ -93,10 +93,10 @@ then restart server to apply the changes<br>
 ### Create Pipeline in Jenkins<br>
 - Select "New Item" - "Pipeline"<br>
 - Set "Name" ("Demo" or something)<br>
-- Set "GitHub project" with an URL to the project (like "https://github.com/trainer04/DevSecOps-demo04.git"). It's optional - if you use GitHub project<br>
+- Set "GitHub project" with an URL to the project (like "https://github.com/trainer04/DevSecOps-lesson02.git"). It's optional - if you use GitHub project<br>
 - Set "Definition" with "Pipeline script from SCM"<br>
 - Set "SCM" as "Git"<br>
-- Set "Repository URL" with your URL (like "https://github.com/trainer04/DevSecOps-demo04.git" or local repo for your own Git server)<br>
+- Set "Repository URL" with your URL (like "https://github.com/trainer04/DevSecOps-lesson02.git" or local repo for your own Git server)<br>
 - Set credentials if necessary (for private repos)<br>
 - Set "Branch Specifier" as "*/main"<br>
 - Set "Script Path" with the path to the Jenkins file (like "Jenkinsfile")<br>
