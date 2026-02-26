@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE - Vulnerable App">Vulnerable App</title>
+    <link rel="stylesheet" href="/style.css">
+    <!-- VULN: External resources without integrity -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- VULN: User input in title -->
+        <header th:if="${pageTitle}">
+            <h1 th:text="${pageTitle}">Vulnerable App</h1>
+        </header>
+        
+        <nav th:replace="fragments/navigation :: nav"></nav>
+        
+        <main>
+            <!-- VULN: Direct insertion of unsanitized content -->
+            <div th:utext="${unsafeContent}"></div>
+            
+            <!-- Safe content -->
+            <div th:text="${safeContent}"></div>
+            
+            <!-- Main content -->
+            <div layout:fragment="content">
+                <p>Default content - should be replaced by pages</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>DevSecOps Training Application | Contains intentional vulnerabilities</p>
+            <p th:text="'Server: ' + ${@environment.getProperty('server.host', 'localhost')}"></p>
+            
+            <!-- VULN: Debug information in footer -->
+            <div th:if="${debug}">
+                <small>
+                    Session: <span th:text="${session.id}"></span> | 
+                    User: <span th:text="${#authentication.name}"></span> | 
+                    Time: <span th:text="${#dates.createNow()}"></span>
+                </small>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- VULN: Inline JavaScript with Thymeleaf expressions -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        // VULN: JavaScript with server-side data
+        var userData = [[${userJson}]];
+        var sessionId = /*[[${session.id}]]*/ 'default-session';
+        var isAdmin = /*[[${#authorization.expression('hasRole(''ADMIN'')')}]]*/ false;
+        
+        // VULN: Debug logging
+        console.log('User data:', userData);
+        console.log('Session:', sessionId);
+        
+        // VULN: Global variable exposure
+        window.appState = {
+            user: userData,
+            session: sessionId,
+            config: {
+                apiUrl: /*[[@{/api}]]*/ '/api',
+                debug: /*[[${debug}]]*/ true
+            }
+        };
+        /*]]>*/
+    </script>
+    
+    <!-- VULN: External script -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>

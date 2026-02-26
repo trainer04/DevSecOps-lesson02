@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Vulnerable App</title>
+    <link rel="stylesheet" href="/style.css">
+    <!-- VULN: External script from CDN without integrity check -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <h1>🔐 Login</h1>
+            
+            <!-- VULN: Form without CSRF token -->
+            <form action="/auth/login" method="POST" id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" 
+                           placeholder="Enter username" required
+                           value="admin">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <!-- VULN: Password autocomplete enabled -->
+                    <input type="password" id="password" name="password" 
+                           placeholder="Enter password" required autocomplete="on"
+                           value="Admin123!">
+                </div>
+                
+                <!-- VULN: Hidden field for redirect -->
+                <input type="hidden" name="redirect" value="http://evil.com">
+                
+                <button type="submit" class="btn-login">Login</button>
+                
+                <div class="form-options">
+                    <label>
+                        <input type="checkbox" name="remember" checked> Remember me (30 days)
+                    </label>
+                    <a href="/auth/reset-password">Forgot password?</a>
+                </div>
+            </form>
+            
+            <!-- VULN: Demo credentials in plain text -->
+            <div class="demo-credentials">
+                <h3>Demo Credentials:</h3>
+                <ul>
+                    <li><strong>Username:</strong> admin</li>
+                    <li><strong>Password:</strong> Admin123!</li>
+                    <li><strong>SQL Injection:</strong> ' OR '1'='1</li>
+                </ul>
+            </div>
+            
+            <div class="vulnerability-info">
+                <h3>🚨 Security Issues in this Form:</h3>
+                <ol>
+                    <li>No CSRF protection</li>
+                    <li>SQL Injection possible in backend</li>
+                    <li>Hardcoded credentials</li>
+                    <li>Open redirect via hidden field</li>
+                    <li>External JavaScript without integrity hash</li>
+                </ol>
+            </div>
+        </div>
+        
+        <!-- VULN: Insecure JavaScript -->
+        <script>
+            $(document).ready(function() {
+                // VULN: Storing credentials in JavaScript variables
+                var defaultUsername = 'admin';
+                var defaultPassword = 'Admin123!';
+                
+                // VULN: Debug logging
+                console.log('Login page loaded');
+                console.log('Default credentials:', defaultUsername, defaultPassword);
+                
+                // VULN: Auto-submit for demo
+                if (window.location.search.includes('autologin')) {
+                    setTimeout(function() {
+                        $('#loginForm').submit();
+                    }, 1000);
+                }
+                
+                // VULN: Password visibility toggle (insecure)
+                $('#showPassword').click(function() {
+                    var passwordField = $('#password');
+                    if (passwordField.attr('type') === 'password') {
+                        passwordField.attr('type', 'text');
+                        $(this).text('Hide');
+                    } else {
+                        passwordField.attr('type', 'password');
+                        $(this).text('Show');
+                    }
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

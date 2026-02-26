@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Vulnerable App</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>⚙️ Admin Panel</h1>
+        <p class="warning">⚠️ <strong>WARNING:</strong> This panel contains dangerous operations!</p>
+        
+        <nav>
+            <a href="/">Home</a> | 
+            <a href="/admin#commands">Command Execution</a> | 
+            <a href="/admin#files">File Operations</a> | 
+            <a href="/admin#system">System Info</a>
+        </nav>
+        
+        <!-- VULN: Command Injection Demo -->
+        <section id="commands" class="vulnerable-section">
+            <h2>🔧 Command Execution</h2>
+            <p class="danger">🚨 VULNERABLE: Command Injection possible</p>
+            
+            <form action="/admin/execute" method="POST" id="commandForm">
+                <div class="form-group">
+                    <label for="command">System Command:</label>
+                    <input type="text" id="command" name="command" 
+                           placeholder="Enter command (e.g., ls, whoami)"
+                           value="ls -la">
+                    <small>Try: <code>ls -la; cat /etc/passwd</code></small>
+                </div>
+                <button type="submit" class="btn-danger">Execute</button>
+            </form>
+            
+            <div class="command-examples">
+                <h4>Dangerous Examples:</h4>
+                <ul>
+                    <li><code>ls -la</code> - List files</li>
+                    <li><code>whoami</code> - Current user</li>
+                    <li><code>cat /etc/passwd</code> - System users</li>
+                    <li><code>rm -rf /</code> - ⚠️ DANGEROUS</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- VULN: Path Traversal Demo -->
+        <section id="files" class="vulnerable-section">
+            <h2>📁 File Operations</h2>
+            <p class="danger">🚨 VULNERABLE: Path Traversal possible</p>
+            
+            <div class="file-ops">
+                <div class="file-op">
+                    <h3>Read File</h3>
+                    <form action="/admin/file" method="GET">
+                        <input type="text" name="filename" 
+                               placeholder="Filename (e.g., application.properties)"
+                               value="../../../etc/passwd">
+                        <button type="submit">Read</button>
+                    </form>
+                </div>
+                
+                <div class="file-op">
+                    <h3>Upload File</h3>
+                    <form action="/admin/upload" method="POST" enctype="multipart/form-data">
+                        <input type="text" name="filename" placeholder="Save as...">
+                        <input type="file" name="file">
+                        <button type="submit">Upload</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+        
+        <!-- VULN: System Information Exposure -->
+        <section id="system" class="vulnerable-section">
+            <h2>💻 System Information</h2>
+            <p class="danger">🚨 VULNERABLE: Information Disclosure</p>
+            
+            <div class="sys-info">
+                <button onclick="fetchSystemInfo()" class="btn-info">Load System Info</button>
+                <div id="systemInfo" class="info-display"></div>
+            </div>
+            
+            <div class="endpoints">
+                <h3>Exposed Endpoints:</h3>
+                <ul>
+                    <li><a href="/actuator/env">Environment Variables</a></li>
+                    <li><a href="/actuator/health">Health Status</a></li>
+                    <li><a href="/actuator/metrics">Metrics</a></li>
+                    <li><a href="/actuator/mappings">URL Mappings</a></li>
+                    <li><a href="/debug">Debug Info</a></li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- VULN: Insecure Deserialization Demo -->
+        <section class="vulnerable-section">
+            <h2>🔄 Object Deserialization</h2>
+            <p class="danger">🚨 VULNERABLE: Insecure Deserialization</p>
+            
+            <button onclick="fetchSerializedObject()" class="btn-warning">
+                Get Serialized Object
+            </button>
+            
+            <div class="deserialize-form">
+                <h3>Deserialize Object (DANGER):</h3>
+                <textarea id="serializedData" placeholder="Paste serialized data here..."></textarea>
+                <button onclick="deserializeObject()" class="btn-danger">
+                    Deserialize
+                </button>
+            </div>
+        </section>
+        
+        <!-- VULN: JavaScript with vulnerabilities -->
+        <script>
+            function fetchSystemInfo() {
+                fetch('/actuator/env')
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('systemInfo').innerHTML = 
+                            '<pre>' + data + '</pre>';
+                    })
+                    .catch(error => {
+                        document.getElementById('systemInfo').innerHTML = 
+                            'Error: ' + error;
+                    });
+            }
+            
+            function fetchSerializedObject() {
+                fetch('/admin/serialize')
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('serializedData').value = data;
+                        alert('Serialized object loaded. This could be dangerous!');
+                    });
+            }
+            
+            function deserializeObject() {
+                const data = document.getElementById('serializedData').value;
+                // VULN: Attempt to deserialize (simulated)
+                try {
+                    // In real app, this would be dangerous
+                    alert('Deserialization attempted with: ' + data.substring(0, 100));
+                } catch (e) {
+                    alert('Error during deserialization: ' + e.message);
+                }
+            }
+            
+            // VULN: Exposing internal data
+            window.appConfig = {
+                debug: true,
+                apiUrl: '/api/v1',
+                adminToken: 'hardcoded-token-123',
+                encryptionKey: 'weak-key-456'
+            };
+            
+            console.log('Admin panel loaded with config:', window.appConfig);
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulnerable App - Home</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>OTUS trainings - Vulnerable Java Application</h1>
+            <p class="subtitle">DevSecOps Training Demo - extended version</p>
+        </header>
+        
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <a href="/auth/login">Login</a>
+            <a href="/users">Users</a>
+            <a href="/admin">Admin Panel</a>
+            <!-- VULN: Open redirect -->
+            <a href="/redirect?url=http://evil.com/phishing">External Link</a>
+        </nav>
+        
+        <main>
+            <section class="welcome">
+                <h2>Welcome to the Vulnerable App</h2>
+                <p>This application contains <strong>intentional security vulnerabilities</strong> for educational purposes.</p>
+                
+                <!-- VULN: Reflected XSS demo -->
+                <div class="search-box">
+                    <h3>Search Users</h3>
+                    <form action="/users/search" method="post">
+                        <input type="text" name="query" placeholder="Enter username..." 
+                               value="<script>alert('XSS')</script>">
+                        <button type="submit">Search</button>
+                    </form>
+                    <p class="hint">Try: <code>' OR '1'='1</code> for SQL Injection</p>
+                </div>
+            </section>
+            
+            <section class="features">
+                <h2>Demo Features</h2>
+                <div class="feature-grid">
+                    <div class="feature">
+                        <h3>🔐 Authentication</h3>
+                        <p>Login with hardcoded credentials or SQL Injection</p>
+                        <ul>
+                            <li>Username: <code>admin</code></li>
+                            <li>Password: <code>Admin123!</code></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature">
+                        <h3>💾 CRUD Operations</h3>
+                        <p>Create, Read, Update, Delete users with vulnerabilities</p>
+                        <a href="/users" class="btn">Manage Users</a>
+                    </div>
+                    
+                    <div class="feature">
+                        <h3>⚙️ Admin Panel</h3>
+                        <p>Command execution, file upload, and more</p>
+                        <a href="/admin" class="btn">Admin Area</a>
+                    </div>
+                    
+                    <div class="feature">
+                        <h3>📊 Monitoring</h3>
+                        <p>Exposed Actuator endpoints</p>
+                        <a href="/actuator" class="btn">View Metrics</a>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="vulnerabilities">
+                <h2>🚨 Intentional Vulnerabilities</h2>
+                <div class="vuln-list">
+                    <div class="vuln-item critical">
+                        <h4>SQL Injection</h4>
+                        <p>User input directly concatenated into SQL queries</p>
+                    </div>
+                    <div class="vuln-item high">
+                        <h4>Cross-Site Scripting (XSS)</h4>
+                        <p>Unsanitized user input rendered in HTML</p>
+                    </div>
+                    <div class="vuln-item medium">
+                        <h4>Hardcoded Credentials</h4>
+                        <p>Passwords in source code and configuration</p>
+                    </div>
+                    <div class="vuln-item high">
+                        <h4>Command Injection</h4>
+                        <p>User input passed to Runtime.exec()</p>
+                    </div>
+                    <div class="vuln-item medium">
+                        <h4>Path Traversal</h4>
+                        <p>Unrestricted file access</p>
+                    </div>
+                    <div class="vuln-item critical">
+                        <h4>Insecure Deserialization</h4>
+                        <p>Untrusted data deserialization</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- VULN: CSRF demonstration -->
+            <section class="csrf-demo">
+                <h2>🔄 CSRF Vulnerability Demo</h2>
+                <form id="csrfForm" action="/users/update-email" method="POST">
+                    <input type="hidden" name="email" value="hacker@evil.com">
+                    <button type="button" onclick="document.getElementById('csrfForm').submit()">
+                        Click to change your email (CSRF)
+                    </button>
+                </form>
+                <p class="warning">⚠️ This form has no CSRF protection!</p>
+            </section>
+        </main>
+        
+        <footer>
+            <p>⚠️ <strong>WARNING:</strong> This is a training application. Do not use real credentials!</p>
+            <p>GitHub Repository | Documentation | Security Report</p>
+        </footer>
+        
+        <!-- VULN: Inline JavaScript with user input -->
+        <script>
+            // VULN: DOM-based XSS
+            const urlParams = new URLSearchParams(window.location.search);
+            const userInput = urlParams.get('input');
+            if (userInput) {
+                document.write('<div class="user-input">User provided: ' + userInput + '</div>');
+            }
+            
+            // VULN: Storing sensitive data in localStorage
+            localStorage.setItem('app_session', JSON.stringify({
+                lastVisit: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                referrer: document.referrer
+            }));
+            
+            // VULN: Debug information exposure
+            console.log('App initialized');
+            console.log('User Agent:', navigator.userAgent);
+            console.log('Screen:', screen.width + 'x' + screen.height);
+        </script>
+    </div>
+</body>
+</html>
