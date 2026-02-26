@@ -133,7 +133,7 @@ For the possibility to use the demo pipeline without cloning and further editing
 - Jenkins > Credentials > System > Global credentials<br>
 - "Add Credentials"<br>
 - Kind: Secret <b>text</b><br>
-- Secret: just the link to the actual git repo - text <b>without backticks</b> (here it is defined as https://github.com/trainer04/DevSecOps-demo04.git)<br>
+- Secret: just the link to the actual git repo - text <b>without backticks</b> (here it is defined as https://github.com/trainer04/DevSecOps-lesson02.git)<br>
 - ID (this ID will be used in the pipeline): <b>git-repo-link</b><br>
 
 #### In our scenario we use the private key password. Let's store it in the Jenkins Credentials (in production usually no such passwords used or they should be stored in Vault)<br>
