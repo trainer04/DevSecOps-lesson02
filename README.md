@@ -86,7 +86,7 @@ The actual pipeline uses Semgrep (as a Docker image) for the SAST stage. The con
 then restart the server to apply the changes<br>
 
 ### Setup Jenkins configuration<br>
-- Unblock Jenkins with https://192.168.0.4:8080 (replace the "192.168.0.4" address with the "demo env" server IP)<br> 
+- Unblock Jenkins with https://192.168.0.4:8080 with the browser on your host machine - where the virtualization is running (replace the "192.168.0.4" address with the "demo env" server IP)<br> 
 `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`<br>
 - Install suggested plugins<br>
 - Add the <b>"Docker Pipeline"</b> and <b>"Pipeline Utility Steps"</b> plugins<br>
