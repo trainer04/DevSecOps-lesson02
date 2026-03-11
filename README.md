@@ -52,7 +52,7 @@ Desired output: `{"name":"mysql","tags":["5.7"]}`<br>
 `curl -O -L "https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64"`<br>
 `sudo mv cosign-linux-amd64 /usr/local/bin/cosign`<br>
 `sudo chmod +x /usr/local/bin/cosign`<br>
-Link to the official site (might not be available from some geolocations - [docs.sigstore.dev](https://docs.sigstore.dev/cosign/system_config/installation/#with-the-cosign-binary-or-rpmdpkg-package))
+Link to the official site (may not be available from some geolocations - [docs.sigstore.dev](https://docs.sigstore.dev/cosign/system_config/installation/#with-the-cosign-binary-or-rpmdpkg-package))
 
 - Generate the key pair with Cosign (for the test CI/CD please specify the password for the private key and remember it - we will use it in this scenario. In production may be decided to use or not of such password according the desired security policies)<br>
 `sudo cosign generate-key-pair`<br>
