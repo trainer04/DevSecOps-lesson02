@@ -79,11 +79,11 @@ In case of the command execution success the output should show the created secr
 The actual pipeline uses Semgrep (as a Docker image) for the SAST stage. The configuration is that the Semgrep container takes rules from the local storage (the .semgrep-rules folder in the repository - required minimum of the rules have been placed there). Additional rules may be taken from the Community (https://github.com/semgrep/semgrep-rules) or written manually<br>
 
 ### Install Jenkins<br>
-According [instructions](https://www.jenkins.io/doc/book/installing/)<br>
+- Install Jenkins into the "demo env" server according [instructions](https://www.jenkins.io/doc/book/installing/)<br>
 
-- Add user jenkins to the docker group<br>
+- Then configure user jenkins to add it in the docker group<br>
 `sudo usermod -a -G docker jenkins`<br>
-then restart server to apply the changes<br>
+then restart the server to apply the changes<br>
 
 ### Setup Jenkins configuration<br>
 - Unblock Jenkins with https://192.168.0.4:8080 (replace the "192.168.0.4" address with the "demo env" server IP)<br> 
