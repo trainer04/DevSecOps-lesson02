@@ -76,7 +76,7 @@ In case of the command execution success the output should show the created secr
 `curl -s --header "X-Vault-Token: test-only-token" http://192.168.0.4:8200/v1/secret/data/docker-signing/cosign-private | jq`<br>
 
 ### SAST stage (Semgrep) settings<br>
-The actual pipeline uses Semgrep (as a Docker image) for the SAST stage. The configuration is that the Semgrep container takes rules from the local storage (the .semgrep-rules folder in the repository). The rules may be taken from the Community (https://github.com/semgrep/semgrep-rules) or written manually<br>
+The actual pipeline uses Semgrep (as a Docker image) for the SAST stage. The configuration is that the Semgrep container takes rules from the local storage (the .semgrep-rules folder in the repository - required minimum of the rules have been placed there). Additional rules may be taken from the Community (https://github.com/semgrep/semgrep-rules) or written manually<br>
 
 ### Install Jenkins<br>
 According [instructions](https://www.jenkins.io/doc/book/installing/)<br>
